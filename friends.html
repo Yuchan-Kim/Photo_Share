@@ -1,0 +1,65 @@
+<!-- author ben lawson (balawson@bu.edu) -->
+<!doctype html>
+{% if message %}
+  <h4>{{message}}!</h4>
+{% endif %}
+<title>Photoshare</title>
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% endif %}
+
+<h2>Search users by user information</h2>
+    <form method="POST" action="/friends/search">
+        <label for="search-user">Search:</label>
+        <input type="text" id="search-user" name="search_user">
+        <button type="submit">Search</button>
+    </form>
+    {% if result %}
+        <h3>Result</h3>
+        <h4>{{ result }}</h4>
+    {% endif %}
+{% if not result %}
+  <h2>Here are your friends</h2>
+  <ul>
+    {% for friend in friends %}
+      <li>{{friend[2]}}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Add friends</h2>
+  <ul>
+    {% for user in users %}
+      <li><a href='/friends/add/{{user[0]}}'>{{user[1]}}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h2>Recommend friends</h2>
+  {% if recommend_friend %}
+  <ul>
+      <li><a href='/friends/add/{{recommend_friend[0]}}'>{{recommend_friend[1]}}</a></li>
+  </ul>
+  {% endif %}
+
+  {% if albums %}
+  <h2>Here are your albums</h2>
+  <ul>
+    {% for album in albums %}
+      <a href='/album/{{album}}'>{{album}}</a>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+{% endif %}
+
+{% if message is none %}
+  <p>You should <a href='/login'>login!</a></p>
+{% else %}
+  <p> Go to <a href='/profile'>profile?</a></p>
+{% endif %}
+
+<ul>
+<li><a href='/logout'>Logout</a></li>
+<li><a href='/'>Home</a></li>
+<li><a href='/albums'>Add an album</a></li>
+<li><a href='/friends'>Friends</a></li>
+</ul>

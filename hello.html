@@ -1,0 +1,118 @@
+<!-- author ben lawson (balawson@bu.edu) -->
+<!doctype html>
+{% if message %}
+  <h4>{{message}}!</h4>
+{% endif %}
+<title>Photoshare</title>
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% endif %}
+
+<h2>Here are public albums</h2>
+<ul>
+  {% for public_album in public_albums %}
+    <a href='/album/public/{{public_album}}'>{{public_album}}</a>
+  {% endfor %}
+</ul>
+
+{% if albums %}
+<h2>Here are your albums</h2>
+<ul>
+  {% for album in albums %}
+    <a href='/album/{{album}}'>{{album}}</a>
+  {% endfor %}
+</ul>
+{% endif %}
+
+
+{% if message is none %}
+  <p>You should <a href='/login'>login!</a></p>
+{% else %}
+  <p> Go to <a href='/profile'>profile?</a></p>
+{% endif %}
+
+<ul>
+<li><a href='/logout'>Logout</a></li>
+<li><a href='/'>Home</a></li>
+<li><a href='/albums'>Add an album</a></li>
+<li><a href='/friends'>Friends</a></li>
+<li><a href='/tags'>Tags</a></li>
+</ul>
+
+<br><br>
+
+<h2>Search Photos</h2>
+<form action="/photo/search" method='GET'>
+    <label for ="tag">Seach TagName:</label>
+    <input type="text" name="tag" /><br />
+    <input type="submit" />
+</form>
+
+<h2>Search Albums</h2>
+<form action="/album/search" method='GET'>
+    <label for ="album">Seach AlbumName:</label>
+    <input type="text" name="album" /><br />
+    <input type="submit" />
+</form>
+
+<h2>Search Replys</h2>
+<form action="/reply/search" method='GET'>
+    <label for ="reply">Seach Replys:</label>
+    <input type="text" name="reply" /><br />
+    <input type="submit" />
+</form>
+
+{% if photos %}
+<h2>Searched Photoes</h2>
+    <ul>
+    {% for photo in photos %}
+        <li><img src='data:image/jpg;base64, {{ base64.b64encode(photo[1]).decode("ascii") }}'/></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% if tags %}
+<h2>Best Tags</h2>
+    <ul>
+    {% for tag in tags %}
+        <li>{{tag[0]}} | {{tag[1]}}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% if s_albums %}
+<h2>Searched Albums</h2>
+    <ul>
+    {% for album in s_albums %}
+        <li> <a href='/album/{{album[1]}}'>{{album[1]}}</a></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% if s_photos %}
+<h2>Searched Replys</h2>
+     {% for photo in s_photos %}
+    <ul>
+        <img src='data:image/jpg;base64, {{ base64.b64encode(photo[1]).decode("ascii") }}'/>
+        {% for reply in photo[3] %}
+         <li>{{reply[2]}} | {{reply[3]}}</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+{% endif %}
+{% if best %}
+<h2>Best Photos</h2>
+    <ul>
+    {% for photo in best %}
+        <li><img src='data:image/jpg;base64, {{ base64.b64encode(photo[1]).decode("ascii") }}'/></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% if top10 %}
+<h2>Top10 Contributors</h2>
+    <ul>
+    {% for top in top10 %}
+        <li>{{top[1]}} || Contribution Score: {{top[2]}} </li>
+    {% endfor %}
+    </ul>
+{% endif %}

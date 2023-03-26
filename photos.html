@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% if message %}
+  <h4>{{message}}!</h4>
+{% endif %}
+
+{% if photos %}
+<h2>Here are your uploaded photos</h2>
+    <ul>
+    {% for photo in photos %}
+        <li><h2>{{photo[2]}}</h2><br>
+        <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
+        <form method="post" enctype="multipart/form-data" action="/photo/like">
+            <Button name="like" value = {{photo[1]}} >Like</Button>
+        </form>
+        {% if photo[5] %}
+        <h4>Likes  ({{ photo[5]|length }}) </h4>
+        {% for like in photo[5] %}
+        <p> {{like[2]}}  </p>
+        {% endfor %}
+         {% endif %}
+        {% if public == false %}
+        <form method="post" enctype="multipart/form-data" action="/delete_photo">
+            <Button name="delete_photo" value = {{photo[1]}} >Delete</Button>
+        </form>
+        <form method="post" enctype="multipart/form-data" action="/photo/tag">
+            <input type="hidden" name="photo_id" value={{photo[1]}} />
+			<input type="text" name="tagname" required='true' /><br />
+			<input type="submit" value="Add Tag"/>
+        </form>
+        {% endif %}
+        {% if photo[4] %}
+        <h4>Replys</h4>
+        {% for reply in photo[4] %}
+        <p>{{reply[2]}} | {{reply[3]}}  </p>
+        {% endfor %}
+         {% endif %}
+        <form method="post" enctype="multipart/form-data" action="/photo/reply">
+            <input type="hidden" name="photo_id" value={{photo[1]}} />
+             <input type="hidden" name="album_name" value={{name}} />
+			<input type="text" name="reply" required='true' /><br />
+			<input type="submit" value="Add Reply"/>
+        </form>
+        <h4>Tags</h4>
+
+        {% if photo[3] %}
+        <h4>Tags</h4>
+            <ul>
+            {% for tag in photo[3] | unique %}
+                <li>{{tag[1]}}</li>
+            {% endfor %}
+            </ul>
+{% endif %}
+
+
+    {% endfor %}
+    </ul>
+{% else %}
+<h2>You do not have photos yet!</h2>
+{% endif %}
+
+{% if public == false %}
+<a href='/album/{{name}}/upload'>Upload</a>
+<a href='/album/delete/{{name}}'>Delete Album</a>
+{% endif %}
+<a href='/'>Home</a>
